@@ -14,7 +14,7 @@ pipeline {
             //git 'https://github.com/jglick/simple-maven-project-with-tests.git'
 
             // Run Maven on a Unix agent.
-            sh "gradle build"
+            sh "gradle build --debug"
             //sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
             // To run Maven on a Windows agent, use
