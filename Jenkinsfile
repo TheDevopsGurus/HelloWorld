@@ -14,7 +14,8 @@ pipeline {
             //git 'https://github.com/jglick/simple-maven-project-with-tests.git'
 
             // Run Maven on a Unix agent.
-            sh "gradle build --debug"
+            //sh "gradle build --debug"
+            sh "docker build -t devopsgurus:v1 -f ./Docker/DockerFile ."
             //sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
             // To run Maven on a Windows agent, use
