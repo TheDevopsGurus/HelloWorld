@@ -37,15 +37,6 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && rm -f /tmp/apache-maven.tar.gz \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-#Installing_Tomcat7
-RUN wget http://mirrors.sorengard.com/apache/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz \
-  && tar xvzf apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz \
-  && mv apache-tomcat-${TOMCAT_MINOR_VERSION} /opt/tomcat
-
-#Installing_Ant
-RUN wget http://apache.mirrors.tds.net//ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz \
-  && tar xvzf apache-ant-${ANT_VERSION}-bin.tar.gz \
-  && mv apache-ant-${ANT_VERSION} /opt/ant
 
 #Install GIT
 RUN yum -y install git
