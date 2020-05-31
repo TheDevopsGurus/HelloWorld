@@ -1,5 +1,6 @@
 # Centos based container with Java, Maven, Ant, Git and Tomcat
-FROM devopsgurus:v1
+FROM java:8
+
 
 RUN git clone https://TheDevopsGurus:devops2020@github.com/TheDevopsGurus/HelloWorld.git
 RUN gradle build
