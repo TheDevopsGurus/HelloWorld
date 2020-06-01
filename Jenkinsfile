@@ -1,6 +1,6 @@
 pipeline {
    agent {
-        docker { image 'devopsgurus:v1X' }
+        docker { image 'localhost/devopsgurus:v1X' }
     }
 
    tools {
