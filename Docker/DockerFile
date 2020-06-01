@@ -1,5 +1,5 @@
 # Centos based container with Java, Maven, Ant, Git and Tomcat
-FROM java:8
+FROM devopsgurus:v1
 
 
 RUN git clone https://TheDevopsGurus:devops2020@github.com/TheDevopsGurus/HelloWorld.git
