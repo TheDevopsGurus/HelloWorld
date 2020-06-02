@@ -15,7 +15,7 @@ pipeline {
             // Get some code from a GitHub repository
             //git 'https://github.com/jglick/simple-maven-project-with-tests.git'
             sh "java -version"
-            sh "cd HelloWorld"
+            //sh "cd HelloWorld"
             sh "gradle build --debug"
             // Run Maven on a Unix agent.
             //sh "gradle build --debug"
