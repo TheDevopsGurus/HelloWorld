@@ -1,6 +1,6 @@
 pipeline {
    agent {
-        docker { image 'java:8' }
+        docker { image 'devopsgurus:v1X' }
     }
 
    tools {
@@ -15,8 +15,8 @@ pipeline {
             // Get some code from a GitHub repository
             //git 'https://github.com/jglick/simple-maven-project-with-tests.git'
             sh "java -version"
-            //sh "cd HelloWorld"
-            //sh "gradle build --debug"
+            sh "cd HelloWorld"
+            sh "gradle build --debug"
             // Run Maven on a Unix agent.
             //sh "gradle build --debug"
             //sh "docker pull centos"
