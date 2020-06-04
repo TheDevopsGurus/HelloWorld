@@ -1,0 +1,7 @@
+FROM devopsgurus:v1
+
+ENV GRADLE_HOME=/opt/gradle/gradle-3.5
+ENV PATH=${GRADLE_HOME}/bin:${PATH}
+
+RUN git clone https://TheDevopsGurus:devops2020@github.com/TheDevopsGurus/HelloWorld.git
+RUN cd HelloWorld
