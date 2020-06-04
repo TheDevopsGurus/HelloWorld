@@ -16,7 +16,7 @@ pipeline {
             //sh "cd HelloWorld"
             //sh "gradle build --debug"
             // Run Maven on a Unix agent.
-            sh "gradle build --debug"
+            sh "gradle build"
             //sh "docker pull centos"
             //sh "docker build -t devopsgurus:v1 -f ./Docker/DockerFile ."
             //sh "mvn -Dmaven.test.failure.ignore=true clean package"
