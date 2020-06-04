@@ -12,7 +12,7 @@ pipeline {
                 sh " echo $PATH"
                 //ENV PATH=${GRADLE_HOME}/bin:${PATH}
                 sh "export GIT_COMMITTER_NAME=TheDevopsGurus"
-                sh "export GIT_COMMITTER_EMAIL=’sendmequickfast@gmail.com’"
+                sh "export GIT_COMMITTER_EMAIL=sendmequickfast@gmail.com"
                 sh  "git clone https://TheDevopsGurus:devops2020@github.com/TheDevopsGurus/HelloWorld.git"
                 sh "cd HelloWorld"
                 sh "gradle build"
