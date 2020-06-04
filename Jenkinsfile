@@ -1,7 +1,5 @@
 pipeline {
-   agent {
-        docker { image 'devopsgurus:v1X' }
-    }
+   agent any
 
    tools {
       // Install the Maven version configured as "M3" and add it to the path.
@@ -16,9 +14,9 @@ pipeline {
             //git 'https://github.com/jglick/simple-maven-project-with-tests.git'
             sh "java -version"
             //sh "cd HelloWorld"
-            sh "gradle build --debug"
-            // Run Maven on a Unix agent.
             //sh "gradle build --debug"
+            // Run Maven on a Unix agent.
+            sh "gradle build --debug"
             //sh "docker pull centos"
             //sh "docker build -t devopsgurus:v1 -f ./Docker/DockerFile ."
             //sh "mvn -Dmaven.test.failure.ignore=true clean package"
