@@ -11,9 +11,7 @@ pipeline {
       stage('Build') {
          steps {
             sh "java -version"
-            sh "pwd"
-            sh "ls -l"
-            sh "docker build -t devopsgurus:v1 -f DockerFile ."
+            sh "docker build -t devopsgurus:v1 -f ./Docker/DockerFile ."
             
          }
 
