@@ -8,9 +8,9 @@ pipeline {
             
             steps {
                 sh "java -version"
-                sh "env GRADLE_HOME=/opt/gradle/gradle-3.5"
-                sh "env PATH=${GRADLE_HOME}/bin:${PATH}"
-                sh "env"
+                sh "ENV  GRADLE_HOME=/opt/gradle/gradle-3.5"
+                sh "ENV PATH=${GRADLE_HOME}/bin:${PATH}"
+                sh "ENV"
                 //sh "export GIT_COMMITTER_NAME='TheDevopsGurus' "
                 //sh "export GIT_COMMITTER_EMAIL='sendmequickfast@gmail.com' "
                  sh "git -c user.name=TheDevopsGurus -c user.email=sendmequickfast@gmail.com  clone https://TheDevopsGurus:devops2020@github.com/TheDevopsGurus/HelloWorld.git"
