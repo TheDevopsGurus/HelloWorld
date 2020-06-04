@@ -8,7 +8,7 @@ pipeline {
             
             steps {
                 sh "java -version"
-                sh "sudo yum -y install setenv"
+                sh "yum -y install setenv"
                 sh "setenv  GRADLE_HOME /opt/gradle/gradle-3.5 "
                 //sh "export PATH=${GRADLE_HOME}/bin:${PATH}"
                 //sh "export GIT_COMMITTER_NAME='TheDevopsGurus' "
