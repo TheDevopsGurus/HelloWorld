@@ -16,7 +16,7 @@ pipeline {
             steps {
                  sh "java -version"
             
-                 sh "gradle build --debug"
+                 sh "gradle build"
             }
         }
     }
