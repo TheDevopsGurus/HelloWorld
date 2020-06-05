@@ -7,8 +7,8 @@ pipeline {
         stage('Set up tools and environment') {
             
             steps {
-                sh "java -version"
-                sh "setenv  GRADLE_HOME /opt/gradle/gradle-3.5 "
+                //sh "java -version"
+                //sh "setenv  GRADLE_HOME /opt/gradle/gradle-3.5 "
                 //sh "export PATH=${GRADLE_HOME}/bin:${PATH}"
                 //sh "export GIT_COMMITTER_NAME='TheDevopsGurus' "
                 //sh "export GIT_COMMITTER_EMAIL='sendmequickfast@gmail.com' "
