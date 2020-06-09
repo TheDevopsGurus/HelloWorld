@@ -8,8 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		testImplementation 'junit:junit:4.12'
-	}
+		}
 }
 
 apply plugin: 'java'
