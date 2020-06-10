@@ -1,0 +1,16 @@
+pipeline {
+   agent any
+
+   
+
+   stages {
+      stage('Infra & Build') {
+         steps {
+            sh "java -version"
+            sh "docker build -t devopsgurus:v1 -f ./Docker/InfraAndBuild/DockerFile ."
+            
+         }
+
+           }
+   }
+}
