@@ -1,6 +1,7 @@
 package com.javainuse;
 
-public class App {
+public class App 
+{
     public String getGreeting() {
         return "Hello world.";
     }
