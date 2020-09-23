@@ -3,7 +3,7 @@
 MSG_FILE=$1
 FILE_CONTENT="$(cat $MSG_FILE)"
 
-export REGEX='(TOOL-[0-9]{4,5}|Merge) .+'
+export REGEX='(TOOL-[0-9]{4,5}|Merge)( .+)?'
 export ERROR_MSG="Error: commit message format must match regex \"${REGEX}\""
 
 if [[ $FILE_CONTENT =~ $REGEX ]]; then
