@@ -1,0 +1,42 @@
+#!/bin/bash
+
+MSG_FILE=$1 # named parameter for the file passed by git with the commit message
+FILE_CONTENT="$(cat $MSG_FILE)" # we read the commit message from the file
+JIRA_FILE="./jira.json" # filename of the file with JSON content
+
+export REGEX='(TOOL-[0-9]{4,5}|Merge) .+' # regular expression for validating the commit message
+export ERROR_MSG="ERROR: commit message format must match regex \"${REGEX}\"" # error message definition
+
+# Verification of the commit message
+if [[ $FILE_CONTENT =~ $REGEX ]]; then # does the commit message matches the expected format?
+ echo "OK: Good commit message." # yes - then it's OK
+else
+ echo $ERROR_MSG # if not - we display the error messages
+ echo "ERROR: Actual commit message: \"$FILE_CONTENT\""
+ exit 1
+fi
+
+if [ ! -f $JIRA_FILE ]; then # sanity check that the file with JSON exists
+    echo "ERROR: JIRA response file does not exist."
+    exit 1
+fi
+
+# Verification of the assignee / secondary assignee
+ASSIGNEE_EMAIL=$(cat $JIRA_FILE | jq -r '.fields.assignee.emailAddress') # get the email of assignee
+SECONDARY_ASSIGNEE_EMAIL=$(cat $JIRA_FILE | jq -r '.fields.customfield_10649.emailAddress') # get the email of secondary assignee
+ACTUAL_EMAIL=$(git config --get user.email) # get the current git user's email
+if [[ ! $ACTUAL_EMAIL == $ASSIGNEE_EMAIL ]]; then # email is different than the assignee's email?
+    if [[ ! $ACTUAL_EMAIL == $SECONDARY_ASSIGNEE_EMAIL ]]; then # and is different than secondary assignee's email?
+        echo "ERROR: current git user ($ACTUAL_EMAIL) is not an assignee ($ASSIGNEE_EMAIL), nor secondary assignee ($SECONDARY_ASSIGNEE_EMAIL)." # then we have an error
+        exit 1
+    fi
+fi
+echo "OK: Current user is the assignee or the secondary assignee." # else: email was either assignee's or secondary assignee's
+
+# Verification of the status
+STATUS=$(cat $JIRA_FILE | jq -r '.fields.status.name') # read the status value
+if [[ $STATUS == "Done" ]]; then # verify status' value
+    echo "ERROR: Task is already in 'Done' state." # if it's "Done" - then error
+    exit 1
+fi
+echo "OK: Status is not 'Done'." # else - it's acceptable status
