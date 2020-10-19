@@ -1,0 +1,62 @@
+#!/bin/bash
+
+MSG_FILE=$1 # named parameter for the file passed by git with the commit message
+FILE_CONTENT="$(cat $MSG_FILE)" # we read the commit message from the file
+JIRA_FILE="/tmp/jira.json" # filename of the file with JSON content
+JIRA_PROJECT_ID="TOOL" # prefix of the project in JIRA
+JIRA_BASE_URL="abc.com" # base URL of the JIRA
+JIRA_USERNAME="jira username" # login of the user for accessing JIRA
+JIRA_ACCESS_TOKEN="token value" # access token to JIRA
+JIRA_NOT_ALLOWED_STATUS="Done" # JIRA status which should cause the script to fail
+
+export REGEX="($JIRA_PROJECT_ID-[0-9]{4,5} .+)|($JIRA_PROJECT_ID-[0-9]{4,5})" # regular expression for validating the commit message
+export ERROR_MSG="ERROR: commit message format must match regex \"${REGEX}\"" # error message definition
+
+# Verification of the commit message
+if [[ $FILE_CONTENT =~ $REGEX ]]; then # does the commit message matches the expected format?
+    echo "OK: Good commit message." # yes - then it's OK
+else
+    echo $ERROR_MSG # if not - we display the error messages
+    echo "ERROR: Actual commit message: \"$FILE_CONTENT\""
+    exit 1
+fi
+
+EXTRACTED_JIRA_NUMBER=$(cat $MSG_FILE | head -n 1 | cut -f 1 -d ' ') # as commit message was OK, we can cut out the JIRA number from the first line
+
+JIRA_ISSUE_URL="https://$JIRA_BASE_URL/rest/api/latest/issue/$EXTRACTED_JIRA_NUMBER" # construct the URL to the JIRA's issue
+
+if [ -f $JIRA_FILE ]; then # if the file exists - remove it
+    rm $JIRA_FILE
+fi
+
+# download new JSON from JIRA server
+curl -u $JIRA_USERNAME:$JIRA_ACCESS_TOKEN \
+   -X GET \
+   -H "Content-Type: application/json" \
+   -o $JIRA_FILE \
+   $JIRA_ISSUE_URL > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then # verify that the download was successful
+    echo "ERROR: Problem occurred while communicating with JIRA. Aborting."
+    exit 1
+fi
+
+# Verification of the assignee / secondary assignee
+ASSIGNEE_EMAIL=$(cat $JIRA_FILE | tr -d '\n' | grep -zoP '"assignee":.*?"emailAddress":\s*\K[^\s,]*(?=\s*,)' | tr -d '\0' | tr -d '"') # get the email of assignee
+SECONDARY_ASSIGNEE_EMAIL=$(cat $JIRA_FILE | tr -d '\n' | grep -zoP '"customfield_10649":.*?"emailAddress":\s*\K[^\s,]*(?=\s*,)' | tr -d '\0' | tr -d '"') # get the email of secondary assignee
+ACTUAL_EMAIL=$(git config --get user.email) # get the current git user's email (used as JIRA login as well)
+if [[ ! $ACTUAL_EMAIL == $ASSIGNEE_EMAIL ]]; then # email is different than the assignee's email?
+    if [[ ! $ACTUAL_EMAIL == $SECONDARY_ASSIGNEE_EMAIL ]]; then # and is different than secondary assignee's email?
+        echo "ERROR: current git user ($ACTUAL_EMAIL) is not an assignee ($ASSIGNEE_EMAIL), nor secondary assignee ($SECONDARY_ASSIGNEE_EMAIL)." # then we have an error
+        exit 1
+    fi
+fi
+echo "OK: Current user is the assignee or the secondary assignee." # else: email was either assignee's or secondary assignee's
+
+# Verification of the status
+STATUS=$(cat $JIRA_FILE | tr -d '\n' | grep -zoP '"status":.*?"name":\s*\K[^\s,}}]*(?=\s*,)' | tr -d '\0' | tr -d '"') # read the status value
+if [[ $STATUS == "$JIRA_NOT_ALLOWED_STATUS" ]]; then # verify the status value
+    echo "ERROR: Task is already in '$JIRA_NOT_ALLOWED_STATUS' state." # if it's not acceptable status - then error
+    exit 1
+fi
+echo "OK: Status is not '$JIRA_NOT_ALLOWED_STATUS'." # else - it's acceptable status
