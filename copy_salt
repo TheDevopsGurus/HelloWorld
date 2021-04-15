@@ -1,0 +1,30 @@
+{% set zip_source = 'D:\POC_Staging_Temp' %}
+{% set zip_destination = 'D:\POC_Staging_Temp' %}
+{% set copy_source = 'D:\POC_Staging_Temp' %}
+{% set copy_target_host = 'cwd1-012625' %}
+{% set copy_target_dest = 'POC_Staging_Temp.zip' %}
+{% set copy_target_drive = 'd' %}
+
+{% set OSFAMILY = salt['grains.get']("os_family") %}
+
+{% if OSFAMILY == "Windows" %}
+
+create_zip_file:
+  cmd.run:
+    - name: compress-archive -path {{ zip_source }} -Destination {{ zip_destination }}
+    - shell: powershell
+
+send_zip_to_target:
+  cmd.run:
+    - name: copy {{ copy_source }} \\{{ copy_target_host }}\{{ copy_target_drive }}$\{{ copy_target_dest }}
+    - shell: powershell
+    - require:
+      - create_zip_file
+
+{% else %}
+
+skip_copy_and_send:
+  test.show_notification:
+    - text: |
+        "The target machine {{ OSFAMILY }} is not supported. Please use Windows machine"
+{% endif %}
